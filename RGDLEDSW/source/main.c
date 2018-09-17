@@ -41,38 +41,38 @@
 
 int main(void) {
 
-	SIM->SCGC5 = 0x2E00;
+	GPIO_clockGating(GPIO_A);
+	GPIO_clockGating(GPIO_B);
+	GPIO_clockGating(GPIO_C);
+	GPIO_clockGating(GPIO_E);
 
-	PORTB->PCR[22] = 0x100;
-	PORTB->PCR[21] = 0x100;
-	PORTE->PCR[26] = 0x100;
-	PORTC->PCR[6]  = 0x00000103;
-	PORTA->PCR[4]  = 0x00000103;
+	GPIO_pinControlRegisterType pinControlRegisterGPIO = GPIO_MUX1;
+	GPIO_pinControlRegister(GPIO_B,BIT21,&pinControlRegisterGPIO);
+	GPIO_pinControlRegister(GPIO_B,BIT22,&pinControlRegisterGPIO);
+	GPIO_pinControlRegister(GPIO_E,BIT26,&pinControlRegisterGPIO);
 
-	GPIOB->PDOR = 0x600000;
-	GPIOE->PDOR = 0x4000000;
+	//GPIO_pinControlRegisterType pinControlRegisterPS = GPIO_PS;
+	//GPIO_pinControlRegisterType pinControlRegisterPE = GPIO_PE;
 
-	GPIOC->PDDR&= ~(0x40);
-	GPIOA->PDDR&= ~(0x10);
-	GPIOB->PDDR   = 0x600000;
-	GPIOE->PDDR   = 0x4000000;
+	//GPIO_pinControlRegister(GPIO_C,BIT6, &pinControlRegisterPE);
+	//GPIO_pinControlRegister(GPIO_C,BIT6, &pinControlRegisterPS);
+
+	PORTC->PCR[6]  = 0x00000103; //esta mal implementado
+	PORTA->PCR[4]  = 0x00000103; //Esta mal implementado
+
+
+	GPIO_dataDirectionPIN(GPIO_B,GPIO_OUTPUT, BIT21);
+	GPIO_dataDirectionPIN(GPIO_B,GPIO_OUTPUT,BIT22);
+	GPIO_dataDirectionPIN(GPIO_E,GPIO_OUTPUT,BIT26);
+
+	GPIO_readPIN(GPIO_A,BIT4);
+	GPIO_readPIN(GPIO_C,BIT6);
+
 
 /*
-GPIO_clockGating(GPIO_A);
-GPIO_clockGating(GPIO_B);
-GPIO_clockGating(GPIO_C);
-GPIO_clockGating(GPIO_E);
-
-GPIO_pinControlRegisterType pinControlRegisterGPIO = GPIO_MUX1;
 GPIO_pinControlRegisterType pinControlRegisterPS = GPIO_PS;
 GPIO_pinControlRegisterType pinControlRegisterPE = GPIO_PE;
 
-
-//GPIO_pinControlRegister(GPIO_A,BIT4, &pinControlRegisterGPIO);
-GPIO_pinControlRegister(GPIO_B,BIT21,&pinControlRegisterGPIO);
-GPIO_pinControlRegister(GPIO_B,BIT22,&pinControlRegisterGPIO);
-//GPIO_pinControlRegister(GPIO_C,BIT6, &pinControlRegisterGPIO);
-GPIO_pinControlRegister(GPIO_E,BIT26,&pinControlRegisterGPIO);
 
 GPIO_pinControlRegister(GPIO_A,BIT4, &pinControlRegisterPS);
 GPIO_pinControlRegister(GPIO_C,BIT6, &pinControlRegisterPS);
@@ -81,13 +81,7 @@ GPIO_pinControlRegister(GPIO_A,BIT4, &pinControlRegisterPE);
 GPIO_pinControlRegister(GPIO_C,BIT6, &pinControlRegisterPE);
 
 //GPIO_dataDirectionPIN(GPIO_A,GPIO_INPUT,BIT4);
-//GPIO_dataDirectionPIN(GPIO_C,GPIO_INPUT,BIT6);
-GPIO_dataDirectionPIN(GPIO_B,GPIO_OUTPUT, BIT21);
-GPIO_dataDirectionPIN(GPIO_B,GPIO_OUTPUT,BIT22);
-GPIO_dataDirectionPIN(GPIO_E,GPIO_OUTPUT,BIT26);
-
-GPIO_readPIN(GPIO_A,BIT4);
-GPIO_readPIN(GPIO_C,BIT6); */
+//GPIO_dataDirectionPIN(GPIO_C,GPIO_INPUT,BIT6); */
 
 
 uint8 color;
@@ -115,18 +109,20 @@ while(1){
 
 	if(FALSE == inputValueSW2){
 		if(color > 0){
-			color2 = color2 -1;
+			color = color2 -1;
 			color = color2;
 		}
 	}
 
 	if(FALSE == inputValueSW3){
 		if(color < 4){
-			color2 = color2 +1;
+			color = color2 +1;
 			color = color2;
 			}
 		}
-
+if(FALSE == inputValueSW3 && FALSE == inputValueSW2 ){
+	color = 5 ;
+}
 	switch (color){
 
 	case 0:
