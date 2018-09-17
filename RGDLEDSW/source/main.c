@@ -1,4 +1,6 @@
 /*
+
+/*
  * Copyright (c) 2016, NXP Semiconductor, Inc.
  * All rights reserved.
  *
@@ -51,15 +53,6 @@ int main(void) {
 	GPIO_pinControlRegister(GPIO_B,BIT22,&pinControlRegisterGPIO);
 	GPIO_pinControlRegister(GPIO_E,BIT26,&pinControlRegisterGPIO);
 
-	//GPIO_pinControlRegisterType pinControlRegisterPS = GPIO_PS;
-	//GPIO_pinControlRegisterType pinControlRegisterPE = GPIO_PE;
-
-	//GPIO_pinControlRegister(GPIO_C,BIT6, &pinControlRegisterPE);
-	//GPIO_pinControlRegister(GPIO_C,BIT6, &pinControlRegisterPS);
-
-	PORTC->PCR[6]  = 0x00000103; //esta mal implementado
-	PORTA->PCR[4]  = 0x00000103; //Esta mal implementado
-
 
 	GPIO_dataDirectionPIN(GPIO_B,GPIO_OUTPUT, BIT21);
 	GPIO_dataDirectionPIN(GPIO_B,GPIO_OUTPUT,BIT22);
@@ -68,20 +61,18 @@ int main(void) {
 	GPIO_readPIN(GPIO_A,BIT4);
 	GPIO_readPIN(GPIO_C,BIT6);
 
+	PORTC->PCR[6]  = 0x00000103; //esta mal implementado
+	PORTA->PCR[4]  = 0x00000103; //Esta mal implementado
 
 /*
 GPIO_pinControlRegisterType pinControlRegisterPS = GPIO_PS;
 GPIO_pinControlRegisterType pinControlRegisterPE = GPIO_PE;
-
-
 GPIO_pinControlRegister(GPIO_A,BIT4, &pinControlRegisterPS);
 GPIO_pinControlRegister(GPIO_C,BIT6, &pinControlRegisterPS);
-
 GPIO_pinControlRegister(GPIO_A,BIT4, &pinControlRegisterPE);
-GPIO_pinControlRegister(GPIO_C,BIT6, &pinControlRegisterPE);
-
+GPIO_pinControlRegister(GPIO_C,BIT6, &pinControlRegisterPE);*/
 //GPIO_dataDirectionPIN(GPIO_A,GPIO_INPUT,BIT4);
-//GPIO_dataDirectionPIN(GPIO_C,GPIO_INPUT,BIT6); */
+//GPIO_dataDirectionPIN(GPIO_C,GPIO_INPUT,BIT6);
 
 
 uint8 color;
@@ -98,33 +89,25 @@ while(1){
 
 		   inputValueSW2 = inputValueSW2 >> 6;
 		   inputValueSW3 = inputValueSW3 >> 3;
-/*
-	inputValueSW2 = GPIOC->PDIR;
-	inputValueSW2 = inputValueSW2 & BIT6;
-	inputValueSW3 = GPIOA->PDIR;
-	inputValueSW3 = inputValueSW3 & BIT4;
-*/
-	//inputValueSW2 = inputValueSW2 >> 6;
-	//inputValueSW3 = inputValueSW3 >> 3;
 
 	if(FALSE == inputValueSW2){
 		if(color > 0){
-			color = color2 -1;
+			color2 = color2 - 1;
 			color = color2;
 		}
 	}
 
 	if(FALSE == inputValueSW3){
 		if(color < 4){
-			color = color2 +1;
+			color2 = color2 + 1;
 			color = color2;
 			}
 		}
+
 if(FALSE == inputValueSW3 && FALSE == inputValueSW2 ){
 	color = 5 ;
 }
 	switch (color){
-
 	case 0:
 		green();
 		delay(650000);
